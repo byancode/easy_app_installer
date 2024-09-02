@@ -6,7 +6,9 @@ buildscript {
     repositories {
         google()
         mavenCentral()
-        maven { url 'https://jitpack.io' }
+        maven {
+            url = uri("https://maven.pkg.github.com/byancode/common_helper")
+        }
         jcenter()
     }
 
@@ -20,7 +22,9 @@ rootProject.allprojects {
     repositories {
         google()
         mavenCentral()
-        maven { url 'https://jitpack.io' }
+        maven {
+            url = uri("https://maven.pkg.github.com/byancode/common_helper")
+        }
         jcenter()
     }
 }
