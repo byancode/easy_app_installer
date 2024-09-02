@@ -1,6 +1,12 @@
 group 'com.gfs.helper.easy_app_installer'
 version '1.0-SNAPSHOT'
 
+plugins {
+    id 'com.android.library'
+    id 'kotlin-android'
+    id 'maven-publish'
+}
+
 buildscript {
     ext.kotlin_version = '1.5.20'
     repositories {
@@ -8,8 +14,12 @@ buildscript {
         mavenCentral()
         maven {
             url = uri("https://maven.pkg.github.com/byancode/common_helper")
+            credentials {
+                username = project.findProperty("gpr.user") ?: System.getenv("USERNAME")
+                password = project.findProperty("gpr.token") ?: System.getenv("TOKEN")
+            }
         }
-        jcenter()
+        // Elimina jcenter() si no es necesario
     }
 
     dependencies {
@@ -18,19 +28,38 @@ buildscript {
     }
 }
 
-rootProject.allprojects {
+allprojects {
     repositories {
         google()
         mavenCentral()
         maven {
             url = uri("https://maven.pkg.github.com/byancode/common_helper")
+            credentials {
+                username = project.findProperty("gpr.user") ?: System.getenv("USERNAME")
+                password = project.findProperty("gpr.token") ?: System.getenv("TOKEN")
+            }
         }
-        jcenter()
+        // Elimina jcenter() si no es necesario
     }
 }
 
-apply plugin: 'com.android.library'
-apply plugin: 'kotlin-android'
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            from components.java
+        }
+    }
+    repositories {
+        maven {
+            name = "GitHubPackages"
+            url = uri("https://maven.pkg.github.com/byancode/common_helper")
+            credentials {
+                username = project.findProperty("gpr.user") ?: System.getenv("USERNAME")
+                password = project.findProperty("gpr.token") ?: System.getenv("TOKEN")
+            }
+        }
+    }
+}
 
 android {
     compileSdkVersion 30
@@ -55,5 +84,6 @@ android {
 
 dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    // Revisa si la versión correcta es sin el prefijo 'v.'
     implementation "com.github.byancode.common_helper:gao:v.0.128"
 }
